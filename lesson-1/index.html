@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html lang="en">
 <head>
-    <title>Web технологии</title>
+    <title>Архитектура ПО</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=792, user-scalable=no">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
@@ -11,113 +11,258 @@
 </head>
 <body class="list">
     <header class="caption">
-        <h1>Web технологии</h1>
-        <p><a href="https://github.com/mialinx/">Дмитрий Смаль</a></p>
+        <h1>Архитектура ПО</h1>
     </header>
 
     <section class="slide shout"><div>
-        <h2>Web технологии</h2>
+        <h2>Архитектура ПО</h2>
     </div></section>
 
     <section class="slide"><div>
-        <h2>Web технологии</h2>
+        <h2>Контактная информация</h2>
+        <p>
+            <h3>Дмитрий Смаль</h3>
+            <ul>
+                <li><a href="https://github.com/mialinx/">https://github.com/mialinx</a></li>
+                <li><a href="https://park.mail.ru/profile/smal/">https://park.mail.ru/profile/smal/</a></li>
+                <li><a href="smal@corp.mail.ru">smal@corp.mail.ru</a></li>
+                <li><a href="mialinx@gmail.com">mialinx@gmail.com</a></li>
+            </ul>
+        </p>
+    </div></section>
+
+    <section class="slide"><div>
+        <h2>Архитектура ?</h2>
+        <ul> 
+            <li>Системная архитектура</li>
+            <li>Архитектура решений (solution)</li>
+            <li>Архитектура ПО</li>
+            <li>Проектирование кода</li>
+            <li>Архитектура инфраструктуры</li>
+        </ul>
+    </div></section>
+
+    <section class="slide"><div>
+        <h2>Зачем нужен этот курс ?</h2>
+        <img src="./pictures/arch.png" style="width: 80%; height: 70%; margin-left: 10%"/>
+    </div></section>
+
+    <section class="slide"><div>
+        <h2>Программа курса</h2>
         <ul>
-            <li>
-                <a href="https://github.com/mialinx/tp-stepic/">https://github.com/mialinx/tp-stepic/</a>
+            <li>Общая информация об архитектуре и моделировании</li>
+            <li>ОПП. Связанность объектов. SOLID. TDD</li>
+            <li>Патерны пользовательского интефейса. MV*</li>
+            <li>Патерны корпоративных приложений</li>
+            <li>Чистая архитекутра. DDD</li>
+            <li>Микросервисная архитектура</li>
+        </ul>
+    </div></section>
+
+    <section class="slide"><div>
+        <h2>Структура курса</h2>
+        <ul>
+            <li>7 смешанных занятий
+                <ul>
+                    <li>теоретия</li>
+                    <li>консультации по проектам</li>
+                </ul>
             </li>
-            <li>
-                <a href="https://park.mail.ru/blog/show/154/">https://park.mail.ru/blog/show/154/</a>
-            </li>
-            <li><a href="smal@corp.mail.ru">smal@corp.mail.ru</a></li>
-            <li><a href="d.sabitov@corp.mail.ru">d.sabitov@corp.mail.ru</a></li>
-            <li><a href="n.meleshenko@corp.mail.ru">n.meleshenko@corp.mail.ru</a></li>
-        </ul>
-
-    </div></section>
-
-    <section class="slide"><div>
-        <h2>О чем этот курс ?</h2>
-        <ul>
-            <li>Общая архитектура WWW</li>
-            <li>Протокол HTTP</li>
-            <li>Архитектура backend</li>
-            <li>Актуальные технологии и ПО</li>
-            <li>«Best practices»</li>
-        </ul>
-    </div></section>
-
-    <section class="slide"><div>
-        <h2>Какие знания потребуются ?</h2>
-        <ul>
-            <li>Общие навыки программирование</li>
-            <li>Знание языка Python на базовом уровне</li>
-            <li>Использование Linux - на уровне пользователя</li>
-            <li>Желательно: опыт HTML верстки</li>
-        </ul>
-    </div></section>
-
-    <section class="slide"><div>
-        <h2>Что останется за рамками курса ?</h2>
-        <ul>
-            <li>Сетевые технологии</li>
-            <li>Все используемые языки программирования</li>
-            <li>Frontend разработка</li>
+            <li>7 домашних заданий</li>
+            <li>привязан к выпускному проекту</li>
         </ul>
     </div></section>
 
     <section class="slide shout"><div>
-        <h2>Internet vs WWW</h2>
+        <h2>Архитектура ПО</h2>
     </div></section>
 
     <section class="slide"><div>
-        <h2>Internet</h2>
-        <p>Internet - глобальная сеть передачи данных</p>
-        <h3>Протоколы</h3>
+        <h2>Определения архитектуры</h2>
+        <blockquote>
+            Архитектура - это набор <b>значимых решений</b> по поводу организации системы, 
+            набор <b>структурных элементов</b> и их <b>интерфейсов</b>, при помощи которых компонуется система, 
+            вместе с их <b>поведением</b>, определяемым во взаимодействии между этими элементами, 
+            компоновка элементов в постепенно укрупняющиеся подсистемы, а также <b>стиль</b> 
+            архитектуры который направляет эту организацию - элементы и их интерфейсы, взаимодействия и компоновку
+        </blockquote> 
+    </div></section>
+    
+    <section class="slide"><div>
+        <h2>Свойства</h2>
         <ul>
-            <li><b>HTTP</b>, SSH, P2P - прикладные протоколы</li>
-            <li>DNS - система имен</li>
-            <li>TCP - надежная последовательная передача данных</li>
-            <li>IP - глобальная адресация, передача в гетерогенной среде</li>
+            <li>Определеляется и существует для удовлетворения требований</li>
+            <li>Сильно зависит от области применения</li>
+            <li>Служит планом для дальнейшей разработки системы</li>
+            <minus>... по крайней мере должна служить</minus>
         </ul>
     </div></section>
 
     <section class="slide"><div>
-        <h2>World Wide Web</h2>
-        <p>WWW - множество <b>взаимосвязанных документов</b>, располагающихся на машинах подключенных к Internet</p>
-        <p>WWW - набор протоколов, серверного и клиентского ПО, позволяющих получать доступ к документам</p>
+        <h2>Признаки хорошей архитекутуры</h2>
+        <ul>
+            <plus>Конецптуальная простота и элегантность</plus>
+            <plus>Небольшие изменения в требовниях не требуют пересмотра архитектуры</plus>
+            <plus>С развитием проекта растет кодовая база, но не сложность</plus>
+            <plus>Локальность изменений</plus>
+            <plus>Сроки разрабокти предсказуемы</plus>
+        </ul>
     </div></section>
 
     <section class="slide"><div>
-        <img src="pictures/hyperlinks.png" class="place"/>
+        <h2>Признаки плохой архитекутуры</h2>
+        <ul>
+            <minus>Малые изменения могут требовать пересмотра архитектуры</minus>
+            <minus>Сложность растет вместе с кодовой базой</plus>
+            <minus>Частые регрессии</minus>
+            <minus>&laquo;Невыполнимые&raquo; требования</minus>
+            <minus>Деморализация команды</minus>
+            <minus>Отказ от использования системы</minus>
+        </ul>
+    </div></section>
+
+    <section class="slide"><div>
+        <h2>Какие решения приходится принимать?</h2>
+        <ul>
+            <li>Проектирование модели данных</li>
+            <li>Разделение на компоненты</li>
+            <li>Проектирование интерфейсов компонентов</li>
+            <li>Выбор языков и технологий</li>
+            <li>Взаимодейсвие и обмен данными между компонентами</li>
+        </ul>
     </div></section>
 
     <section class="slide shout"><div>
-        <h2>Документы</h2>
+        <h2>Стоп, а как?</h2>
     </div></section>
 
     <section class="slide"><div>
-        <h2>Типы документов (MIME-типы)</h2>
+        <h2>На основании чего принимаются решения</h2>
+        <ul>
+            <li>Принципы: DRY, KISS, SOLID ... </li>
+            <li>Типовые решения - Patterns</li>
+            <li>Интуиция и опыт (увы)</li>
+        </ul>
+    </div></section>
+
+    <section class="slide shout"><div>
+        <h2>KISS</h2>
+    </div></section>
+
+    <section class="slide"><div>
+        <h2>Keep it Simple, Stupid</h2>
+        <ul>
+            <li>Функции и классы - маленькие</li>
+            <li>Минимум компонентов</li>
+            <li>Минимум технологий</li>
+            <li>Но не меньше чем необходимо...</li>
+        </ul>
+        <a href="https://www.python.org/dev/peps/pep-0020/">Zen of Python</a>
+    </div></section>
+
+    <section class="slide shout"><div>
+        <h2>DRY</h2>
+    </div></section>
+
+    <section class="slide"><div>
+        <h2>Don't repeat yourself</h2>
+    </div></section>
+
+
+    <section class="slide shout"><div>
+        <h2>Парадигмы программирования</h2>
+    </div></section>
+
+    <section class="slide shout"><div>
+        <h2>Как описать принятые решения?</h2>
+    </div></section>
+
+    <section class="slide"><div>
+        <h2>Диаграммы UML</h2>
         <div class="lr">
-            <div class="c5">
-                <ul>
-                    <li>text/html</li>
-                    <li>text/css</li>
-                    <li>text/javascript</li>
-                    <li>image/png</li>
-                </ul>
-            </div>
-            <div class="c5">
-                <ul>
-                    <li>video/mp4</li>
-                    <li>text/xml</li>
-                    <li>application/json</li>
-                    <li><a href="http://www.iana.org/assignments/media-types/media-types.xhtml">Полный список MIME типов</a></li>
-                </ul>
-            </div>
+            <ul>
+                <li><b>классов</b></li>
+                <li>компонентов</li>
+                <li>составной структуры</li>
+                <li><b>развёртывания</b></li>
+                <li>объектов</li>
+                <li>пакетов</li>
+            </ul>
+            <ul style="margin-left: 3em">
+                <li>деятельности</li>
+                <li>машины состояний</li>
+                <li>сценариев использования</li>
+                <li><b>последовательности</b></li>
+                <li>синхронизации</li>
+                <li><b>сущностей и связей</b></li>
+            </ul>
         </div>
-        <p><small>Расширения файлов играют второстепенную роль</small></p>
+        <a href="http://www.uml-diagrams.org/">http://www.uml-diagrams.org/</a>
     </div></section>
 
+    <section class="slide"><div>
+        <h2>Диаграмма сущностей</h2>
+        <img src="pictures/er.png" style="width: 80%"/>
+    </div></section>
+
+    <section class="slide"><div>
+        <img src="pictures/er.png" class="place" style="heigth: 95%; width: 95%; z-index: 1000"/>
+    </div></section>
+
+    <section class="slide"><div>
+        <h2>Диаграмма классов</h2>
+        <img src="pictures/classes.png"/>
+    </div></section>
+
+    <section class="slide"><div>
+        <h2>Виды взаимосвязей</h2>
+        <img src="pictures/class_rels.png" style="width: 60%"/>
+    </div></section>
+
+    <section class="slide"><div>
+        <h2>Диаграмма последовательности</h2>
+        <img src="pictures/seq.png" style="width: 90%; height: 70%"/>
+    </div></section>
+
+    <section class="slide"><div>
+        <img src="pictures/seq.png" class="place" style="width: 95%; height: 95%"/>
+    </div></section>
+
+    <section class="slide"><div>
+        <h2>Диаграмма развертывания</h2>
+        <img src="pictures/deployment.png" style="height: 70%"/>
+    </div></section>
+
+    <section class="slide"><div>
+        <img src="pictures/deployment.png" class="place" style="height: 100%; z-index: 1000"/>
+    </div></section>
+
+    <section class="slide"><div>
+        <h2>Гибкое моделирование</h2>
+        <ul>
+            <li>Итеративное моделирование. Сначала - высокоуровневая архитектура.</li>
+            <li>Just Good Enough детализация моделей</li>
+            <li>Множество мелких моделей. Ситуационное моделирование.</li>
+            <li>Моделирование - для сихнронизации видения команды</li>
+            <li>И да, маркеры, доски, фотографии - это ок</li>
+        </ul>
+        <a href="http://www.agilemodeling.com/">http://www.agilemodeling.com/</a>
+    </div></section>
+
+    <section class="slide shout"><div>
+        <h2>Домашнее задание</h2>
+    </div></section>
+
+    <section class="slide"><div>
+        <h2>Домашнее задание 1</h2>
+        <ul>
+            <li>Подготовить UML диаграммы архитектуры вашего проекта</li>
+            <li>Указать какие решения являются принципиальными</li>
+            <li>Дать логическое обоснование принятых решений</li>
+        </ul>
+    </div></section>
+
+    <!--
     <section class="slide"><div>
         <h2>text/html</h2>
         <script type="snippet" lang="html">
@@ -133,197 +278,7 @@
             </html>
         </script>
     </div></section>
-
-    <section class="slide"><div>
-        <h2>text/css</h2>
-        <script type="snippet" lang="css">
-            .hljs-subst,
-            .hljs-title,
-            .json .hljs-value {
-              font-weight: normal;
-              color: #000;
-            }
-        </script>
-    </div></section>
-
-    <section class="slide"><div>
-        <h2>text/xml</h2>
-        <script type="snippet" lang="xml">
-            <response status="ok">
-                <friends>
-                    <friend id="1" name="v.pupkin"/>
-                    <friend id="2" name="a.pushkin"/>
-                    <friend id="3" name="n.tesla"/>
-                </friends>
-            </response>
-        </script>
-    </div></section>
-
-    <section class="slide"><div>
-        <h2>application/json</h2>
-        <script type="snippet" lang="json">
-            {
-                "status": "ok",
-                "friends": [
-                    { "id": 1, "name": "v.pupkin" },
-                    { "id": 2, "name": "a.pushkin" },
-                    { "id": 3, "name": "n.tesla" }
-                ]
-            }
-        </script>
-    </div></section>
-
-    <section class="slide"><div>
-        <h2>Документы могут быть</h2>
-        <ul>
-            <li><b>Статические</b>
-                <ul>
-                    <li>Это файлы на дисках сервера</li>
-                    <li>Как правило, обладают постоянным адресом</li>
-                </ul>
-            </li>
-            <li><b>Динамические</b>
-                <ul>
-                    <li>Создаются на каждый запрос</li>
-                    <li>Содержимое зависит от времени и пользователя</li>
-                    <li>Адрес может быть постоянным или меняться</li>
-                </ul>
-            </li>
-        </ul>
-    </div></section>
-
-    <section class="slide shout"><div>
-        <h2>URL</h2>
-    </div></section>
-
-    <section class="slide"><div>
-        <h2>URL - unified resource locator</h2>
-        <code>http://server.org:8080/path/doc.html?a=1&b=2#part1</code>
-        <ul>
-            <li>http - протокол<br></li>
-            <li>server.org - DNS имя сервера<br></li>
-            <li>8080 - TCP порт<br></li>
-            <li>/path/doc.html - путь к файлу<br></li>
-            <li>a=1&b=2 - опции запроса<br></li>
-            <li>part1 - якорь, положение на странице<br></li>
-        </ul>
-    </div></section>
-
-    <section class="slide"><div>
-        <h2>Абсолютные и относительные URL</h2>
-        <ul>
-            <li><code>http://server.org/1.html</code> - абсолютный</li>
-            <li><code>//server.org/1.html</code> - абсолютный (schemeless)</li>
-            <li><code>/another/page.html?a=1</code> - относительный (в пределах домена)</li>
-            <li><code>pictures/1.png</code> - относительный (от URL текущего документа)</li>
-            <li><code>?a=1&amp;b=2</code> - относительный (от URL текущего документа)</li>
-            <li><code>#part2</code> - относительный (в пределах текущего документа)</li>
-        </ul>
-    </div></section>
-
-    <section class="slide"><div>
-        <h2>Правила разрешения URL</h2>
-        <code>https://site.com/path/page.html</code> - основной документ<br>
-        + <code>http://wikipedia.org</code> = <code>http://wikipedia.org</code><br>
-        + <code>//cdn.org/jquery.js</code> = <code><b>https</b>://cdn.org/jquery.js</code><br>
-        + <code>/admin/index.html</code> = <code><b>https://site.com</b>/admin/index.html</code><br>
-        + <code>another.html</code> = <code><b>https://site.com/path/</b>another.html</code><br>
-        + <code>?full=1</code> = <code><b>https://site.com/path/page.html</b>?full=1</code><br>
-        + <code>#chapter2</code> = <code><b>https://site.com/path/page.html</b>#chaprer2</code><br>
-    </div></section>
-
-    <section class="slide shout"><div>
-        <h2>Как документы могут ссылаться друг на друга?</h2>
-    </div></section>
-
-    <section class="slide"><div>
-        <h2>HTML - гиперссылки</h2>
-        <script type="snippet" lang="html">
-            Список товаров в <a href="/cart.php">корзине</a>
-        </script>
-        <p>Список товаров в <a href="/cart.php">корзине</a></p>
-    </div></section>
-
-    <section class="slide"><div>
-        <h2>HTML - формы</h2>
-        <script type="snippet" lang="html">
-            <form action="https://duckduckgo.com/">
-                <input type="text" name="q" value="">
-                <input type="hidden" name="ia" value="images">
-                <button type="submit">Найти</a>
-            </form>
-        </script>
-        <form action="https://duckduckgo.com/">
-            <input type="hidden" name="ia" value="images">
-            <input type="text" name="q" value="">
-            <button type="submit">Найти</a>
-        </form>
-    </div></section>
-
-    <section class="slide"><div>
-        <h2>HTML - ресурсы</h2>
-        <script type="snippet" lang="html">
-            <link rel="stylesheet" href="/css/index.css">
-            <script src="http://code.jquery.com/jquery-2.1.4.js">
-            </scr&#8203;ipt>
-            <img src="pictures/network.png" width="200" >
-        </script>
-        <link rel="stylesheet" href="/css/style.css">
-        <script src="http://code.jquery.com/jquery-2.1.4.js"></script>
-        <img src="pictures/network.png" width="200" >
-    </div></section>
-
-    <section class="slide"><div>
-        <h2>CSS - ресурсы</h2>
-        <script type="snippet" lang="css">
-            .slide {
-                background-image: url(../pictures/network.png)
-            }
-            @font-face {
-                font-family: Terminus;
-                src: url(fonts/terminus.ttf);
-            }
-        </script>
-    </div></section>
-
-    <section class="slide"><div>
-        <h2>JavaScript - прямое указание URL</h2>
-        <script type="snippet" lang="javascript">
-            var saveApiUrl = '/items/save/';
-            var newTitle = 'Duck tales';
-            $.ajax({
-                type: 'POST',
-                url:  saveApiUrl,
-                data: { id: 10, title: newTitle }
-            });
-        </script>
-    </div></section>
-
-    <section class="slide shout"><div>
-        <h2>Клиент-серверная архитектура</h2>
-    </div></section>
-
-    <section class="slide"><div>
-        <h2>Клиент-серверная архитектура</h2>
-        <p>Web-клиенты работают на компьютерах конечных пользователей.
-           Задача Web-клиентов состоит в получении и отображении документов.</p>
-        <p>Web-сервера работают (как правило) на серверах в датацентрах.
-           Их задача заключается в хранении (или генерации) и отдачи документов.</p>
-    </div></section>
-
-    <section class="slide"><div>
-        <img src="pictures/network.png" class="place"/>
-    </div></section>
-
-    <section class="slide"><div>
-        <h2>Преимущества подхода</h2>
-        <ul>
-            <li>Открытый протокол</li>
-            <li>Стандартный клиент</li>
-            <li>Прозрачный способ взаимодействия приложений</li>
-            <li>Распределенная и масштабируемая система</li>
-        </ul>
-    </div></section>
+    -->
 
     <!-- http://www.evolutionoftheweb.com -->
     <div class="progress"><div></div></div>
