@@ -1,0 +1,467 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+    <title>Архитектура ПО</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=792, user-scalable=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <link rel="stylesheet" href="../node_modules/shower-bright/styles/screen.css">
+    <link rel="stylesheet" href="../css/highlight/github.css">
+    <link rel="stylesheet" href="../css/index.css">
+</head>
+<body class="list">
+
+    <header class="caption">
+        <h1>Архитектура ПО</h1>
+    </header>
+
+    <!------------------------>
+
+    <section class="slide shout"><div>
+        <h2>Back to ООП</h2>
+    </div></section>
+
+    <section class="slide"><div>
+        <h2>Концепции</h2>
+        <ul>
+            <li>Класс</li>
+            <li>Объект</li>
+            <li>Интерфейс</li>
+            <li>Роль / Примесь</li>
+            <li>Инкапсуляция</li>
+            <li>Наследование</li>
+            <li>Реализация</li>
+            <li>Полиморфизм</li>
+        </ul>
+    </div></section>
+
+    <section class="slide"><div>
+        <h2>Класс</h2>
+        <p>Класс - нечто, обладающее поведением</p>
+        <ul>
+            <li>Содержит <b>методы</b></li>
+            <li>Может содержать <b>аттрибуты</b> либо описывать процедуру инициализации</li>
+            <li>Может наследовать методы от другого(других) классов</li>
+        </ul>
+    </div></section>
+
+    <section class="slide"><div>
+        <h2>Объект</h2>
+        <p>Объект - данные, обладающие <b>связанным</b> с ними поведением</p>
+        <ul>
+            <li>Принадлежит <b>конкретному</b> классу</li>
+            <li>Содержит данные, соответсвующие аттрибутам класса</li>
+            <li>В динамически типизированных языках может содержать произвольные данные</li>
+        </ul>
+    </div></section>
+
+    <section class="slide"><div>
+        <h2>Интерфейс</h2>
+        <p>Интерфейс - набор методов (сигнатур), описывающий требования к ккласу в конетексте какой-либо задачи.
+            Проверка соответсвия класса интерфейсу может происходить:</p>
+        <ul>
+            <li>Статически (<code>implements</code> in Java)</li>
+            <li>Динамически (duck typing in Python/Perl/JavaScript)</li>
+            <li>Статически, неявно (Go interfaces)</li>
+        </ul>
+    </div></section>
+
+
+
+    <section class="slide shout"><div>
+        <h2>Пример задачи</h2>
+    </div></section>
+
+    <section class="slide"><div>
+        <blockquote>
+            <p>
+                Нужно сделать продажу коробок с игровыми товарами!
+                Пользователь покупает коробку, нажимет открыть, выпадает случайный товар.
+                Пользователь получает PIN-код товара и активирует товар в GameName.
+                PIN-коды и шансы выпадения пришлют позже.
+            </p>
+            <p>
+                Мы ведь уже продаем серийники от игр, сделать коробки будет просто ?
+                Давайте заведем новый "тип" игры - "коробка" и у нас все готово.
+            </p>
+        </blockquote>
+    </div></section>
+
+    <section class="slide"><div>
+        <blockquote>
+            Несколькими днями позже...
+            <ul>
+                <li>Нужно показывать все счастливчиков, получивших "редкий" товар</li>
+                <li>GameName хочет давать нам PIN через свое API, но пока его нет</li>
+                <li>Нужно что бы коробку можно было открыть 3 раза</li>
+                <li>Что-то мы не доверяем вашему рандому, давайте протестируем?</li>
+            </ul>
+            И немного визионерства
+            <ul>
+                <li>И еще мы хотим продавать товары для игры WorldOfPunks, свое API?</li>
+                <li>И еще продавать товары за баллы из программы лояльности</li>
+                <li>И вообще у нас будет биржа как Steam Marketplace</li>
+            </ul>
+        </blockquote>
+    </div></section>
+
+
+
+    <section class="slide"><div>
+        <h2>Решение в лоб</h2>
+        <script type="snippet" lang="python">
+            from flask import Flask, render_template, request, make_response
+
+            app = Flask(__name__)
+
+            @app.route("/open_box")
+            def hello():
+                user = load_user(request)
+                box_item = load_item(request.args.get('id'))
+                if box_item.user_id != user.id:
+                    return make_response('', 403)
+                parts = load_parts(box_item.product_id)
+                if len(parts):
+                    raise Exception("box is empty")
+                dropped = random.choice(parts)
+                add_product_to_inventory(user.id, dropped.id)
+                remove_item_from_inventory(user.id, box_item.id)
+                return render_template('results.html', product=dropped)
+
+            if __name__ == "__main__":
+                app.run()
+        </script>
+    </div></section>
+
+
+    <section class="slide"><div>
+        <script type="snippet" lang="python">
+            from utils import get_cursor
+
+            def load_item(pk):
+                c = get_cursor()
+                c.execute("select * from items where id = %s", (pk,))
+                return c.fetchone()
+
+            def load_user(request):
+                # TODO: загрузка пользователя
+                return {}
+
+            def load_parts(box_id):
+                c = get_cursor()
+                c.execute("select * from products where box_id = %s", box_id)
+                return list(c.fetchall())
+
+            def add_product_to_inventory(user_id, product_id):
+                c = get_cursor()
+                c.execute("insert into items (user_id, product_id) values (%s, %s)", (user_id, product_id))
+
+            def remove_item_from_inventory(item_id):
+                c = get_cursor()
+                c.execute("delete from items where id = %s", (item_id,))
+        </script>
+    </div></section>
+
+
+
+    <section class="slide shout"><div>
+        <h2>Процесс анализа</h2>
+    </div></section>
+
+    <section class="slide"><div>
+        <h2>Декомпозия</h2>
+        <blockquote>
+            Способ управления сложными системами был известен еще в древности - <i>divide et impera<i> (разделя и властвуй)
+            <br>
+            Дейкстра
+        </blockquote>
+        <ul>
+            <li>Алгоритмическая декомпозиция</li>
+            <li>Объектная декомпозиция</li>
+        </ul>
+        <!-- TODO: уровни абстракции, Гради Бутч -->
+    </div></section>
+
+    <section class="slide"><div>
+        <h2>Процесс анализа</h2>
+        <ul>
+            <li>Идентифицировать классы и объекты</li>
+            <li>Определить семантику классов</li>
+            <li>Идентифицировать связи между классами и объектами</li>
+            <li>Уточнить интрефейсы и реализовать классы</li>
+            <li>Повторить</li>
+        </ul>
+    </div></section>
+
+    <section class="slide"><div>
+        <h2>Идентификация классов</h2>
+        <ul>
+            <li>Осязаемые сущности: (пользователь, товар, корзина и т.п.)</li>
+            <li>Роли: (товар)</li>
+            <li>События: (покупка, открытие коробки)</li>
+            <li>Процессы: (создание заказа, открытие коробки)</li>
+        </ul>
+        <p>Цель - составить <b>словарь</b> терминов</p>
+    </section>
+
+    <section class="slide"><div>
+        <h2>Выявление семантики</h2>
+        <ul>
+            <li>Выбираем <b>сценарий</b>, определяем задействованные абстракции</li>
+            <li>Для каждой абстракции определяем свойства, необходимые что-бы завершить сценарий</li>
+            <li>Перераспределяем обязанности между, что бы соблюсти принципы ООП и сбалансировать поведение</li>
+        </ul>
+        <p>Цель - определить поведение и атрибуты каждой абстракции, выявленной на предыдущем шаге</p>
+    </div></section>
+
+    <section class="slide"><div>
+        <h2>Идентификация связей</h2>
+        <ul>
+            <li>Выбираем абстракции задействованные в определенном <b>сценарии</b></li>
+            <li>Выясняем наличие и типы связей между абстракциями</li>
+            <li>Стараемся обеспечить минимальную связанность между классами</li>
+            <li>Проверяем годность решения для выбранного сценария</li>
+        </ul>
+        <p>Результа - диаграмма классов</p>
+    </div></section>
+
+
+
+    <section class="slide shout"><div>
+        <h2>Low coupling, high cohension</h2>
+    </div></section>
+
+    <section class="slide"><div>
+        <h2>Связанность (coupling)</h2>
+        <p>Связанность - это зависимость одного класса от изменений в другом.
+            Разные связи между классами обеспечивают разную связанность (по убыванию):</p>
+        <ul>
+            <li>Наследование</li>
+            <li>Зависимость (использование)</li>
+            <li>Ассоциация (ссылка)</li>
+            <li>Зависимость / ассоциация от интерфейса</li>
+        </ul>
+    </div></section>
+
+    <section class="slide"><div>
+        <h2>Cohesion (сплоченность)</h2>
+        <p>Cohesion - степень взаимодействия аттрибутов и методов внутри одного класса.</p>
+        <p><small>Ошибки перевода: coupling - зацепление, cohesion - связанность</small></p>
+    </div></section>
+
+    <section class="slide"><div>
+        <img src="pictures/coupling-cohension.png" class="center" style="width: 70%">
+    </div></section>
+
+
+
+
+    <section class="slide shout"><div>
+        <h2>Закон Деметры</h2>
+    </div></section>
+
+    <section class="slide"><div>
+        <h2>Закон Деметры</h2>
+        <blockquote>
+            Don't talk to strangers
+        </blockquote>
+        <p>
+            Метод M объекта O может вызывать только методы:
+            <ul>
+                <li>Самого объекта О</li>
+                <li>Объектов с которыми О имеет ассоциации</li>
+                <li>Параметров переданных в M</li>
+                <li>Объектов созданных в рамках M</li>
+            </ul>
+        </p>
+    </div></section>
+
+    <section class="slide"><div>
+        <script type="snippet" lang="python">
+            class Item(object):
+
+                logger = logging.getLogger(__name__)
+
+                def __init__(self, user, product):
+                    self.user = user
+                    self.product = product
+
+                def open(self, times):
+                    parts = self.product.parts
+                    self.logger.info("opening {0}".format(self))
+                    # NOT OK!
+                    self.logger.handlers[0].flush()
+                    # NOT OK!
+                    self.product.game.api.check_availability(self.product.id)
+                    # ...
+        </script>
+    </div></section>
+
+
+
+
+    <section class="slide shout"><div>
+        <h2>Принципы SOLID</h2>
+    </div></section>
+
+    <section class="slide"><div>
+        <h2>SRE - Signle Responsibility</h2>
+        <p>Каждый класс должен отвечать только за что-то одно, и эта ответственность должна быть полностью включена в класс</p>
+        <p>Класс должен иметь только одну причину для внесения изменений</p>
+        <p>Анти-паттерн: God-Object</p>
+        <p>Анти-паттерн: Active-record</p>
+    </div></section>
+
+
+    <section class="slide"><div>
+        <h2>OCP - Open Closed Principle</h2>
+        <p>Программные сущности (классы, модули, функции и т.д.) должны быть открыты для расширения, но закрыты для изменения</p>
+        <ul>
+            <li>Поведение сущности может быть расширено созданием новых сущностей</li>
+            <li>В результате расширения НЕ должны вносится изменения в код самой сущности или использующий ее</li>
+        </ul>
+        <!-- TODO: выделение интерфейсов -->
+    </div></section>
+
+    <section class="slide"><div>
+        <h2>LSP - Liskov Substitution Principle</h2>
+        <p>
+            Код использующий объекты класса P должен корректно работать и с объектами любого класса-насследника C.
+        </p>
+        <p>
+            Иначе: классы наследники НЕ должны делать того, что не подразумевалось при проектировании родителя.
+        </p>
+        <!-- TODO: Design by contract, контрактное программирование -->
+    </div></section>
+
+    <section class="slide"><div>
+        <h2>ISP - The Interface Segregation Principle</h2>
+        <p>
+            Интерфейсы должны быть компактными. Лучше большое количество мелких интерфейсов, чем несколько крупных.
+        </p>
+        <p>
+            Отличный пример: интерфейсы в Go
+        </p>
+    </div></section>
+
+    <section class="slide"><div>
+        <h2>DIP - The Dependency Inversion Principle</h2>
+        <ul>
+            <li>Модули верхнего уровня не должны зависеть от модулей нижнего уровня. Оба должны зависеть от абстракции</li>
+            <li>Абстракции не должны зависеть от деталей. Детали должны зависеть от абстракций.</li>
+            <li>WUT ???</li>
+        </ul>
+        <p>
+            Все нетривиальные зависимости должны быть ассоциациями, т.е. аттрибутами объекта
+        </p>
+    </div></section>
+
+
+
+
+    <section class="slide shout"><div>
+        <h2>Unit тесты</h2>
+    </div></section>
+
+    <section class="slide"><div>
+        <h2>xUnit-тесты</h2>
+        <ul>
+            <li>Unit-тесты проверяют функционал отдельных классов, функции и т.д.</li>
+            <li>Разрабатываются и поддерживаются программистами</li>
+            <li>Эффективное средство для проверки архитектуры проекты<br>
+                <b>Плохо спроектированный код невозможно тестировать!</b>
+            </li>
+        </ul>
+    </div></section>
+
+
+    <section class="slide"><div>
+        <h2>xUnit-тесты</h2>
+        <script type="snippet" lang="python">
+            import unittest
+
+            class TestStringMethods(unittest.TestCase):
+
+                def test_upper(self):
+                    self.assertEqual('foo'.upper(), 'FOO')
+
+                def test_isupper(self):
+                    self.assertTrue('FOO'.isupper())
+                    self.assertFalse('Foo'.isupper())
+
+                def test_split(self):
+                    s = 'hello world'
+                    self.assertEqual(s.split(), ['hello', 'world'])
+                    with self.assertRaises(TypeError):
+                        s.split(2)
+        </script>
+    </div></section>
+
+
+    <section class="slide shout"><div>
+        <h2>TDD</h2>
+    </div></section>
+
+    <section class="slide"><div>
+        <h2>Test Driven Development</h2>
+        <ul>
+            <li>Написание нового теста</li>
+            <li>Запуск теста, тест НЕ должен пройти</li>
+            <li>Написание минимально возможного кода для работы теста</li>
+            <li>Запуск теста, тест ДОЛЖЕН пройти</li>
+            <li>Запуск всех тестов</li>
+            <li>Повторение итерации</li>
+        </ul>
+    </div></section>
+
+    <section class="slide"><div>
+        <img src="pictures/tdd.png" class="center">
+    </div></section>
+
+    <section class="slide"><div>
+        <h2>Преимущества и недостатки TDD</h2>
+        <ul>
+            <plus>Вы все-таки будете писать тесты :)</plus>
+            <plus>Вынуждает продумывать интерфейс до реализации</plus>
+            <minus>Может привести к недопроектированию (тесты проходят и ок)</minus>
+        </ul>
+    </div></section>
+
+    <section class="slide"><div>
+        <h2>Вместо xUnit тестов</h2>
+        <p>
+            Если ваш сервис (или микросервис) предоставляет API, то можно тестировать его.
+            Формально - интеграционное тестирование.<br>
+            Проблемы:
+        </p>
+        <ul>
+            <li>Развернуть все сервисы</li>
+            <li>Заглушки (mock) для внешних сервисов</li>
+            <li>Наполнить базу(ы) данных</li>
+        </ul>
+    </div></section>
+
+    <section class="slide"><div>
+        <h2>Домашнее задание</h2>
+        <ul>
+            <li>Предложить схему тестирования вашего проекта</li>
+            <li>Создать smoke-тест</li>
+        </ul>
+    </div></section>
+
+    <section class="slide"><div>
+        <h2>Преимущества и недостатки TDD</h2>
+        <ul>
+            <plus>Вы все-таки будете писать тесты :)</plus>
+            <plus>Вынуждает продумывать интерфейс до реализации</plus>
+            <minus>Может привести к недопроектированию (тесты проходят и ок)</minus>
+        </ul>
+    </div></section>
+
+    <!-- http://www.evolutionoftheweb.com -->
+    <div class="progress"><div></div></div>
+    <script src="../js/highlight.pack.js"></script>
+    <script src="../node_modules/shower-core/shower.min.js"></script>
+    <script src="../js/init.js"></script>
+</body>
+</html>
