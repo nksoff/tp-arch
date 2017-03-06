@@ -110,10 +110,6 @@
     <section class="slide"><div>
         <h2>Решение в лоб</h2>
         <script type="snippet" lang="python">
-            from flask import Flask, render_template, request, make_response
-
-            app = Flask(__name__)
-
             @app.route("/open_box")
             def hello():
                 user = load_user(request)
@@ -127,9 +123,6 @@
                 add_product_to_inventory(user.id, dropped.id)
                 remove_item_from_inventory(user.id, box_item.id)
                 return render_template('results.html', product=dropped)
-
-            if __name__ == "__main__":
-                app.run()
         </script>
     </div></section>
 
@@ -298,8 +291,6 @@
     </div></section>
 
 
-
-
     <section class="slide shout"><div>
         <h2>Принципы SOLID</h2>
     </div></section>
@@ -311,7 +302,6 @@
         <p>Анти-паттерн: God-Object</p>
         <p>Анти-паттерн: Active-record</p>
     </div></section>
-
 
     <section class="slide"><div>
         <h2>OCP - Open Closed Principle</h2>
@@ -356,7 +346,7 @@
         </p>
     </div></section>
 
-
+    <!-- TODO: Отличие от OCP, Service Locator, InverseOfControl -->
 
 
     <section class="slide shout"><div>
@@ -446,15 +436,6 @@
         <ul>
             <li>Предложить схему тестирования вашего проекта</li>
             <li>Создать smoke-тест</li>
-        </ul>
-    </div></section>
-
-    <section class="slide"><div>
-        <h2>Преимущества и недостатки TDD</h2>
-        <ul>
-            <plus>Вы все-таки будете писать тесты :)</plus>
-            <plus>Вынуждает продумывать интерфейс до реализации</plus>
-            <minus>Может привести к недопроектированию (тесты проходят и ок)</minus>
         </ul>
     </div></section>
 
