@@ -1,0 +1,257 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+    <title>Архитектура ПО</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=792, user-scalable=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <link rel="stylesheet" href="../node_modules/shower-bright/styles/screen.css">
+    <link rel="stylesheet" href="../css/highlight/github.css">
+    <link rel="stylesheet" href="../css/index.css">
+</head>
+<body class="list">
+
+    <header class="caption">
+        <h1>Архитектура ПО</h1>
+    </header>
+
+    <!------------------------>
+
+    <section class="slide shout"><div>
+        <h2>Архитектура GUI</h2>
+    </div></section>
+
+    <section class="slide"><div>
+        <h2>Немного о данных</h2>
+        <img class="center" src="pictures/data_copies.png"/>
+        <br>
+        <ul>
+            <li><code>shared state</code> - общедоступные данные</li>
+            <li><code>session state</code> - временная копия в памяти приложения</li>
+            <li><code>screen state</code> - данные в виджете</li>
+        </ul>
+    </div></section>
+
+    <section class="slide"><div>
+        <img class="place" src="pictures/yagram.png"/>
+    </div></section>
+
+    <section class="slide shout"><div>
+        <h2>Решение в лоб</h2>
+    </div></section>
+
+    <section class="slide"><div>
+        <script type="snippet" lang="javascript">
+            var SettingsForm = {
+                settings: $('#settings'),
+                idField: $('#settingsId'),
+                nickField: $('#settingsNick'),
+                saveBtn: $('#settingsSave'),
+                dialogHeader: $('#dialog').find('.header'),
+                saveSettings: function() {
+                    var id = this.idField.val();
+                    var nick = this.nickField.val();
+                    $.post('/set_nick/', { id: id, nick: nick });
+                    $('.sidebar')
+                        .find('.user[data-id="' + id + '"]')
+                        .find('.nickname').text(nick);
+                    if (this.dialogHeader.data('id') == id) {
+                        this.dialogHeader.text(nick);
+                    }
+                    this.settings.hide();
+                },
+                init: function() {
+                    //this.saveBtn = $('<button style="...">Сохранить</button>');
+                    this.saveBtn.on('click', this.saveSettings.bind(this));
+                }
+            }
+        </script>
+    </div></section>
+
+    <section class="slide"><div>
+        <h2>Fowler: Forms & Controls</h2>
+        Элементы управления - стандартные<br>
+        Форма:
+        <ul>
+            <li>Создает и определяет расположение элементов</li>
+            <li>Содержит логику поведения, которая не может быть размещена в контролах</li>
+        </ul>
+    </div></section>
+
+    <section class="slide"><div>
+        <h2>Fowler: Forms & Controls</h2>
+        <img class="center" src="pictures/forms_controls.png">
+    </div></section>
+
+    <section class="slide"><div>
+        <h2>Fowler: Forms & Controls</h2>
+        <p>Session state = Screen state</p>
+        <ul>
+            <plus>Простота</plus>
+            <plus>Намерения разработчика легко читаются</plus>
+            <plus>Хорошее повторное использование виджетов</plus>
+            <minus>После ~ 5-8 контролов наступает сингулярность :)</minus>
+        </ul>
+        TODO: рассказать историю, можно анекдот, выглядеть уверенным
+    </div></section>
+
+
+
+    <section class="slide shout"><div>
+        <h2>Паттерн MVC</h2>
+    </div></section>
+
+    <section class="slide"><div>
+        <h2>Model-View-Controller</h2>
+        <ul>
+            <li>Делает строгое разделение между представлением (View/Controller) и данными (Model)</li>
+            <li><code>Model</code> содержит данные и методы работы с ними, генерирует события при их изменении</li>
+            <li><code>Controller</code> обрабатывает события UI (действия пользователя) и изменяет модель</li>
+            <li><code>View</code> подписывается на события моделей, что гарантирует согласованность интерфейса</li>
+        </ul>
+    </div></section>
+
+    <section class="slide"><div>
+        <img class="place" src="pictures/mvc.png">
+    </div></section>
+
+    <section class="slide shout"><div>
+        <h2>Выделение модели данных</h2>
+    </div></section>
+   
+    <section class="slide"><div>
+        <h2>Domain model</h2>
+        <img class="center" src="pictures/model.png">
+    </div></section>
+
+    <section class="slide"><div>
+        <h2>Domain model</h2>
+        <p>
+            Объекты содержащие данные вашей предметной области и основные методы работы с ними.
+            Должны быть <b>чистыми</b>: не зависеть от GUI, внешних систем и т.п.
+        </p>
+    </div></section>
+
+    <section class="slide shout"><div>
+        <h2>События и обработчики</h2>
+    </div></section>
+
+    <section class="slide"><div>
+        <h2>Паттерн Observer</h2>
+        <img class="center" src="pictures/observer.png"> 
+    </div></section>
+
+    <section class="slide"><div>
+        <script type="snippet" lang="javascript">
+            function User(id, nick, isOnline) {
+                this.id = id;
+                this.nick = nick;
+                this.isOnline = isOnline;
+                this.listeners = [];
+            }
+            User.prototype.bind = function(l) {
+                this.listeners.push(l);
+            };
+            User.prototype.trigger = function(ev, arg) {
+                for (var l of this.listeners) {
+                    l(ev, arg);
+                }
+            };
+            User.prototype.setNick = function(nick) {
+                this.nick = nick
+                this.trigger('change', this);
+            };
+        </script>
+    </div></section>
+
+    <section class="slide"><div>
+        <h2>Готовые реализации: microevent, $</h2>
+        <script type="snippet" lang="javascript">
+            function User(id, nick, isOnline) {
+                this.id = id;
+                this.nick = nick;
+                this.isOnline = isOnline;
+            }
+            User.prototype.setNick = function(nick) {
+                this.nick = nick
+                this.trigger('change', this);
+            };
+            User.prototype.getNick = function() {
+                return this.nick;
+            };
+            MicroEvent.mixin(User.prototype);
+        </script>
+    </div></section>
+
+    <section class="slide"><div>
+        <h2>Контроллер</h2>
+        <script type="snippet" lang="javascript">
+            function SettingsCtrl(user, settings) {
+                this.user = user;
+                this.settings = settings;
+                this.nickField = settings.getElementsByClassName('settingsNick')[0];
+                this.saveBtn = settings.getElementsByClassName('settingsBtn')[0];
+                this.saveBtn.addEventListener("click", this.saveSettings.bind(this));
+            }
+            SettingsCtrl.prototype.saveSettings = function() {
+                var nick = this.nickField.value;
+                this.user.setNick(nick);
+            };
+        </script>
+    </div></section>
+    
+    <section class="slide"><div>
+        <h2>Представление (Ooops..)</h2>
+        <p>У нас есть стандартный виджет TextNode, Input, etc...</p>
+        <p>Как заставить его "слушать" события модели ?</p>
+        <p>Как сказать какие методы какой модели нужно вызывать ?</p>
+    </div></section>
+
+    <section class="slide"><div>
+        <h2>Представление</h2>
+        <script type="snippet" lang="javascript">
+            var DialogHeader = document.registerElement('x-diaglog-header', {
+                  prototype: Object.create(HTMLElement.prototype)
+            });
+            DialogHeader.prototype.setUser = function(user) {
+                this.user = user;
+                user.bind('change', this.redrawUser.bind(this));
+            };
+            DialogHeader.prototype.redrawUser = function() {
+                this.textContent = user.getNick() + ' ' + String(user.getMessages().length);
+                this.style["color"] = user.isOnline() ? "green" : "gray";
+            };
+        </script>
+        <p><code>registerElement</code> - экспирементальная фича, но всегда можно сделать ассоциацию с готовым элементом</p>
+    </div></section>
+
+    <section class="slide"><div>
+        <h2>MVC - ключевые моменты и проблемы</h2>
+        <ul>
+            <li>Полное разделение между моделью и представлением</li>
+            <li>Представление разделяется на Controller и View</li>
+            <li>Изменение View происходит <b>только</b> через события модели</li>
+            <minus>Зачастую соответвие между данными View и моделью не 1-к-1</minus>
+            <minus>Кто должен создавать всю структуру объектов?</minus>
+        </ul>
+    </div></section>
+
+    <section class="slide shout"><div>
+        <h2>Паттерн MVP</h2>
+    </div></section>
+
+    <section class="slide shout"><div>
+        <h2>Паттерн MVVM</h2>
+    </div></section>
+
+    <section class="slide shout"><div>
+        <h2>Flux</h2>
+    </div></section>
+
+    <!-- http://www.evolutionoftheweb.com -->
+    <div class="progress"><div></div></div>
+    <script src="../js/highlight.pack.js"></script>
+    <script src="../node_modules/shower-core/shower.min.js"></script>
+    <script src="../js/init.js"></script>
+</body>
+</html>
