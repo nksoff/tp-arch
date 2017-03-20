@@ -279,14 +279,15 @@
     </div></section>
 
     <section class="slide shout"><div>
-        <h2>React & Flux</h2>
+        <h2>React</h2>
     </div></section>
 
     <section class="slide"><div>
         <h2>React</h2>
         <p>
             Классический подход к GUI - долгоживущие объекты.
-            React way - 
+            <br>
+            React way - обновить компонент целиком.
         </p>
         <p>
             <a href="http://blog.andrewray.me/reactjs-for-stupid-people/">ReactJS For Stupid People</a>
@@ -294,6 +295,95 @@
         </p>
     </div></section>
 
+    <section class="slide"><div>
+        <h2>React - layout страницы</h2>
+        <script type="snippet" lang="html">
+            <!DOCTYPE html>
+            <html>
+              <body>
+                <div id="root"></div>
+                <script src="js/react/react.js"></script>
+                <script src="js/react/react-dom.js"></script>
+                <script src="js/react/browser.min.js"></script>
+                <script type="text/babel" src="js/app.js"></script>
+              </body>
+            </html>
+        </script>
+    </div></section>
+
+    <section class="slide"><div>
+        <h2>React - приложение</h2>
+        <script type="snippet" lang="javascript">
+            // подключить модели
+            var users = UserList(); // domain-modle 
+            var currentUser = users.getCurrent(); // current dialog user
+            // подключить компоненты React
+            var App = ...;
+            // и т.д.
+            ReactDOM.render(
+                <App>
+                    <Sidebar users={users} />
+                    <Dialog user={currentUser} />
+                </App>,
+                document.getElementById('root')
+            );
+        </script>
+    </div></section>
+
+    <section class="slide"><div>
+        <h2>React - компоненты</h2>
+        <script type="snippet" lang="javascript">
+            var Dialog = React.createClass({
+                render: function() {
+                    var user = this.props.user;
+                    var messages = user.getMessages(1);
+                    return (
+                        <div className="dialog">
+                            <div className="dialog__header">
+                                <span class="{ user.isOnline ? 'online' : 'offline' }">
+                                    { user.getNick() + "(" + messages.lenght + ")" }
+                                </span> 
+                            </div>
+                            <div className="dialog__messages">
+                                 {messages.map(function(msg) {
+                                     return <DialogMessage message={msg} />;
+                                 })}
+                            </div>
+                        </div>
+                    );
+                }
+            });
+        </script>
+    </div></section>
+
+    <section class="slide"><div>
+        <h2>React - обработка событий</h2>
+        <script type="snippet" lang="javascript">
+            var SettingsForm = React.createClass({
+                getInitialState: function() {
+                    return {
+                        'nick': this.props.user.getNick(),
+                    }
+                },
+                saveSettings: function() {
+                    this.props.user.setNick(this.state.nick);
+                },
+                render: function() {
+                    var user = this.props.user;
+                    return (
+                        <div className="settings">
+                            <input value={this.state.nick} >
+                            <button onClick={this.saveSettings}>SAVE</button>
+                        </div>
+                    );
+                }
+            });
+        </script>
+    </div></section>
+
+    <section class="slide shout"><div>
+        <h2>Flux</h2>
+    </div></section>
 
     <!-- http://www.evolutionoftheweb.com -->
     <div class="progress"><div></div></div>
