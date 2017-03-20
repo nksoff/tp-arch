@@ -302,10 +302,10 @@
             <html>
               <body>
                 <div id="root"></div>
-                <script src="js/react/react.js"></script>
-                <script src="js/react/react-dom.js"></script>
-                <script src="js/react/browser.min.js"></script>
-                <script type="text/babel" src="js/app.js"></script>
+                <script src="js/react/react.js"></scr ipt>
+                <script src="js/react/react-dom.js"></scr ipt>
+                <script src="js/react/browser.min.js"></scr ipt>
+                <script type="text/babel" src="js/app.js"></scr ipt>
               </body>
             </html>
         </script>
@@ -384,6 +384,55 @@
     <section class="slide shout"><div>
         <h2>Flux</h2>
     </div></section>
+
+    <section class="slide"><div>
+        <h2>Flux data flow</h2>
+        <img class="center" src="pictures/flux.png" style="width: 100%">
+    </div></section>
+
+    <section class="slide"><div>
+        <h2>Основные идеи Flux</h2>
+        <ul>
+            <li>Каждое хранилище получает каждое событие</li>
+            <li>Данные в моделе изменяются только в ответ на событие</li>
+            <li>Любое изменение данные в хранилище создает "change" событие</li>
+            <li>Любое представление использующее данные хранилища, должно быть подписано на "change"</li>
+        </ul>
+    </div></section>
+
+    <section class="slide"><div>
+        <h2>React - генерация событий</h2>
+        <script type="snippet" lang="javascript">
+            var SettingsForm = React.createClass({
+                // initialState
+                saveSettings: function() {
+                    Dispatcher.dispatch({
+                        actionName: 'change-user',
+                        user: { id: this.props.user.id, nick: this.state.nick },
+                    });
+                },
+                // render
+            });
+        </script>
+    </div></section>
+
+    <section class="slide"><div>
+        <h2>React - обработка изменения хранилища</h2>
+        <script type="snippet" lang="javascript">
+            var Dialog = React.createClass({
+                componentDidMount: function() {  
+                    UserList.bind('change', this.listChanged);
+                },
+                listChanged: function() {
+                    this.forceUpdate();
+                },
+                render: function() {
+                    // same render logic
+                },
+            });
+        </script>
+    </div></section>
+
 
     <!-- http://www.evolutionoftheweb.com -->
     <div class="progress"><div></div></div>
