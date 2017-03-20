@@ -240,13 +240,60 @@
         <h2>Паттерн MVP</h2>
     </div></section>
 
+    <section class="slide"><div>
+        <h2>Model-View-Presenter</h2>
+        По сути: тот-же MVC
+        <ul>
+            <li>Controller - обычно обслуживает один виджет, Presenter - форму</li>
+            <li>Presenter может изменять состояние View. Вплоть до Passive View</li>
+        </ul>
+    </div></section>
+
+    <section class="slide"><div>
+        <img class="place" src="pictures/mvp.png">
+    </div></section>
+
     <section class="slide shout"><div>
         <h2>Паттерн MVVM</h2>
     </div></section>
 
-    <section class="slide shout"><div>
-        <h2>Flux</h2>
+    <section class="slide"><div>
+        <h2>Model-View-ViewModel</h2>
+        <p>Проблема MVC: данные с точки зрения модели (screen data) и модель данных (session data) - это разные данные. В разном формате.</p>
+        <p>Решение: у каждого виджета своя промежуточная модель данных - <code>ViewModel</code>. Синхронизация с моделью через события.</p>
     </div></section>
+
+    <section class="slide"><div>
+        <h2>Проблема MVC</h2>
+        <img class="center" src="pictures/mvc_bad.png"/>
+    </div></section>
+
+    <section class="slide"><div>
+        <h2>ViewModel</h2>
+        <img class="center" src="pictures/presentation_model.png"/>
+    </div></section>
+
+    <section class="slide"><div>
+        <h2>Two-way data binding</h2>
+        <p>TODO: рассмотреть Angular</p>
+    </div></section>
+
+    <section class="slide shout"><div>
+        <h2>React & Flux</h2>
+    </div></section>
+
+    <section class="slide"><div>
+        <h2>React</h2>
+        <p>
+            Классический подход к GUI - долгоживущие объекты.
+            React way - 
+        </p>
+        <p>
+            <a href="http://blog.andrewray.me/reactjs-for-stupid-people/">ReactJS For Stupid People</a>
+            <a href="http://blog.andrewray.me/flux-for-stupid-people/">Flux For Stupid People</a>
+        </p>
+    </div></section>
+
 
     <!-- http://www.evolutionoftheweb.com -->
     <div class="progress"><div></div></div>
