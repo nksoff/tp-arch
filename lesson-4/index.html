@@ -1,0 +1,176 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+    <title>Архитектура ПО</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=792, user-scalable=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <link rel="stylesheet" href="../node_modules/shower-bright/styles/screen.css">
+    <link rel="stylesheet" href="../css/highlight/github.css">
+    <link rel="stylesheet" href="../css/index.css">
+</head>
+<body class="list">
+
+    <header class="caption">
+        <h1>Архитектура ПО</h1>
+    </header>
+
+    <!------------------------>
+
+    <section class="slide shout"><div>
+        <h2>Архитектура корпоративных приложений</h2>
+    </div></section>
+
+    <section class="slide"><div>
+        <h2>Многоуровневая архитектура</h2>
+    </div></section>
+
+    <section class="slide shout"><div>
+        <h2>Бизнес логика</h2>
+    </div></section>
+
+    <section class="slide shout"><div>
+        <h2>Доступ к данным</h2>
+    </div></section>
+
+    <section class="slide shout"><div>
+        <h2>Уровень представления</h2>
+    </div></section>
+
+    <section class="slide shout"><div>
+        <h2>Управление сессиями</h2>
+    </div></section>
+
+    <section class="slide"><div>
+        <h2>Statefull</h2>
+        <p>Statefull сервер хранит состояние между запросами, в некоторых случаях поддерживает соединение с клиентом</p>
+        <p>Сессия - набор долгоживущих объектов в памяти сервера, связанных с определнным пользователем</p>
+        <ul>
+            <plus>более дешевые запросы, меньше накладных расходов</plus>
+            <plus>возможен более гибкий протокол</plus>
+            <minus>scalability</minus>
+            <minus>более сложный failover</minus>
+        </ul>
+    </div></section>
+
+    <section class="slide"><div>
+        <h2>Stateless</h2>
+        <p>Stateless сервер не хранит состояние, все объекты существую в рамках одного запроса</p>
+        <p>Объекты сессии необходимо "восстанавливать" при каждом запросе</p>
+        <ul>
+            <plus>scalability / failover</plus>
+            <plus>легкий запуск в "облачном" окружении</plus>
+            <minus>накладные расходы</minus>
+            <minus>протокол запрос-ответ</minus>
+        </ul>
+    </div></section>
+
+    <section class="slide"><div>
+        <h2>Client Sessions</h2>
+        <p>Все данные сессии хранятся на клиенте, на сервер передаются через:</p>
+        <ul>
+            <li>Cookie</li>
+            <li>URL</li>
+            <li><code>input type="hidden"</code></li>
+        </ul>
+    </div></section>
+
+    <section class="slide"><div>
+        <h2>Когда использовать</h2>
+        <ul>
+            <li>При отсутвии иного механизма</li>
+            <li>Если сессия содержит мало данных</li>
+            <li>Если сессия не содержит "секретной" информации</li>
+            <li>Single Page Application</li>
+        </ul>
+    </div></section>
+
+    <section class="slide"><div>
+        <h2>Server/Database Sessions</h2>
+        <p>Данные хранятся на сервере, клиент передает только ключ сессии</p>
+        <p>Варианты хранилищ:</p>
+        <ul>
+            <li>Память</li>
+            <li>Файловая система</li>
+            <li>Key-Value база данных</li>
+            <li>Реляционная база данных</li>
+        </ul>
+    </div></section>
+
+    <section class="slide shout"><div>
+        <h2>Concurency</h2>
+    </div></section>
+
+    <section class="slide"><div>
+        <h2>Основные проблемы</h2>
+        <ul>
+            <li>Потерянное обновление</li>
+            <li>Несогласованное чтение</li>
+            <li>Длительные транзакции</li>
+        </ul>
+    </div></section>
+
+    <section class="slide"><div>
+        <h2>Методы решения</h2>
+        <ul>
+            <li>Классические транзакции СУБД</li>
+            <li>Пессимистичные блокировки</li>
+            <li>Оптимистичные блокировки</li>
+        </ul>
+    </div></section>
+
+    <section class="slide"><div>
+        <h2>Пессимистичная блокировка</h2>
+        <img src="pictures/pessimistic_lock.png" class="center"/>
+    </div></section>
+
+    <section class="slide"><div>
+        <h2>Когда использовать</h2>
+        <ul>
+            <plus>при <b>высокой</b> конкуренции за ресурсы</plus>
+            <plus>если не желательно заставлять пользователя <b>повторять действия</b></plus>
+            <minus>если можно обойтись одной транзакцией СУБД</minus>
+            <minus>если оптимистичная блокировка приемлема</minus>
+            <li>Проблемы с pessimistic lock?</li>
+        </ul>
+    </div></section>
+
+    <section class="slide"><div>
+        <h2>Оптимистичная блокировка</h2>
+        <img src="pictures/optimistic_lock.png" class="center" style="height: 75%; width: 60%;"/>
+    </div></section>
+
+    <section class="slide"><div>
+        <h2>Когда использовать</h2>
+        <ul>
+            <plus>при <b>низкой</b> конкуренции, когда шанс конфликта не велик</plus>
+            <plus>если желательно проблем с pessimistic lock</plus>
+            <minus>если согласованность не существенна</minus>
+        </ul>
+    </div></section>
+
+    <section class="slide"><div>
+        <h2>Где размещать код блокировок ?</h2>
+        <ul>
+            <plus>Фреймворк, "Ядро" (суперклассы, миксины и т.п.)</plus>
+            <minus>Код приложения</minus>
+        </ul>
+        <script type="snippet" lang="python">
+            class BadFrom(forms.ModelForm):
+                # ...
+                def clean(self):
+                    if self.instance.version != self.cleaned_data["version"]:
+                        raise ValidationError("Data was changed")
+
+            class GoodForm(forms.ModelForm, core.forms.OptimisticLock):
+                # ...
+        </script>
+    </div></section>
+
+    <!-- http://www.evolutionoftheweb.com -->
+    <div class="progress"><div></div></div>
+    <script src="../js/highlight.pack.js"></script>
+    <script src="../node_modules/shower-core/shower.min.js"></script>
+    <script src="../js/init.js"></script>
+</body>
+</html>
