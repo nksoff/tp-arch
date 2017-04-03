@@ -23,19 +23,254 @@
 
     <section class="slide"><div>
         <h2>Многоуровневая архитектура</h2>
+        <img src="pictures/layers.png" class="center">
+    </div></section>
+
+    <section class="slide"><div>
+        <h2>Роли слоев</h2>
+        <p>
+            <b>Business logic</b> - описывает основные сущности и процессы вашей предметной области. Должна оставаться <b>чистой</b>.
+            <br>
+            <b>Data Access</b> - слой для работы с базами данных, внешними системами и т.д. Сохраняет бизнес логику чистой.
+            <br>
+            <b>Presentation</b> - прием запросов и отображение результатов для различных потребителей. Позволяет поддерживать несколько потребителей.
+        </p>
+    </div></section>
+
+    <section class="slide"><div>
+        <h2>Как сохранить BL чистой ?</h2>
+        <ul>
+            <li>Hexagonal Architecture</li>
+            <li>Clean Architecture</li>
+            <li>Onion Architecture</li>
+        </ul>
+        TODO: пример
     </div></section>
 
     <section class="slide shout"><div>
         <h2>Бизнес логика</h2>
     </div></section>
 
+    <section class="slide"><div>
+        <h2>Варианты реализации BL</h2>
+        <ul>
+            <li><code>Script</code></li>
+            <li><code>Domain Model</code></li>
+            <li><code>Service Layer</code></li>
+        </ul>
+    </div></section>
+
+    <section class="slide"><div>
+        <h2>Script</h2>
+        <img src="pictures/script.png" class="center" style="width: 100%">
+    </div></section>
+
+    <section class="slide"><div>
+        <h2>Script</h2>
+        <script type="snippet" lang="python">
+            def purchase_product(user_id, product_id):
+                product = find_product(product_id)
+                user = find_user(user_id)
+                price = product.price * (1 - user.discount)
+                if user.balance < price:
+                    raise BusinessError("not_enough_money")
+                order_id = create_order(user_id, product_id)
+                return { 'order_id': order_id, 'final_price': price }
+        </script>
+        <p>Django Views - подходит под паттерн Script?</p>
+    </div></section>
+
+    <section class="slide"><div>
+        <h2>Domain Model</h2>
+        <img src="pictures/domain_model.png" class="center" style="width: 100%"> 
+    </div></section>
+
+    <section class="slide"><div>
+        <h2>Domain Model</h2>
+        <script type="snippet" lang="python">
+            class Product(object):
+                price = 0
+                def price_for_user(self, user):
+                    return self.price * (1 - user.discount)
+
+            class User(object):
+                discount = 0
+                balance = 0
+                def purchase_product(self, product):
+                    if self.balance < product.price_for_user(self):
+                        raise BusinessError("not_enough_money")
+                    return Order(user, product)
+        </script>
+        <p>Django Models - подходит под паттерн Domain Model?</p>
+    </div></section>
+
+    <section class="slide"><div>
+        <h2>Преимущества и недостатки</h2>
+        <ul>
+            <minus>Трудоемкий подход</minus>
+            <minus>Требует практики (anemic models)</minus>
+            <plus>Упрощает поддержку (long-term)</plus>
+            <plus>Позволяет использовать весь арсенал ООП</plus>
+            <plus>Избавляет от дублирования кода</plus>
+            <plus>Позволяют проще понять бизнес (DDD)</plus>
+        </ul>
+    </div></section>
+    
+    <section class="slide"><div>
+        <h2>Нюансы Domain Model</h2>
+        <ul>
+            <li>Правильное размещение кода</li>
+            <li>Сходтство / отличие от структуры таблиц</li>
+            <li>Как наполнять данными ?</li>
+            <li>Модели убрать зависимость от слоя Data Access</li>
+        </ul>
+    </div></section>
+
+    <section class="slide"><div>
+        <h2>Service Layer</h2>
+        <img src="pictures/service_layer.png" class="center" style="width: 65%"> 
+    </div></section>
+
+    <section class="slide"><div>
+        <h2>Service Layer</h2>
+        <p><code>Service Layer</code> - процедурный слой, работающий поверх Domain Model и реализующий сценарии,
+            не относящиеся явно ни к одной модели, либо затрагивающие слишком много разных.
+        </p>
+        <p>Иногда (clean architecture) Service Layer называют <code>UseCase</code></p>
+    </div></section>
+
     <section class="slide shout"><div>
         <h2>Доступ к данным</h2>
     </div></section>
 
+    <section class="slide"><div>
+        <h2>Варианты реализации BL</h2>
+        <ul>
+            <li>Row Data GateWay</li>
+            <li>Active Record</li>
+            <li>Data Mapper</li>
+        </ul>
+    </div></section>
+
+    <section class="slide"><div>
+        <h2>Row Data Gateway</h2>
+        <img src="pictures/row_data_gateway.png" class="center">
+    </div></section>
+
+    <section class="slide"><div>
+        <h2>Row Data Gateway</h2>
+        <p><code>Row Data Gateway</code> - классы выступает в качестве обертки для работы с одним источником данных.
+            Зачастую с одной таблицей. Экземпляр класса = строка таблицы<br>
+            Row Data Gateway <b>не предполагает</b> наличия бизнес логики.<br>
+            Чаще всего используется вмест с <code>Script</code>
+        </p> 
+    </div></section>
+
+    <section class="slide"><div>
+        <h2>ActiveRecord</h2>
+        <p><code>ActiveRecord</code> = <code>Row Data Gateway</code> + бизнес логика<br>.
+            Модели на основе <code>ActiveRecord</code> обычно соответвуют таблицам 1 к 1.
+            Обычно использует готовый суперкласс, который содержит методы:
+        </p>
+        <ul>
+            <li>Создания новой записи</li>
+            <li>Создание записи из строки в базе</li>
+            <li>Статические методы для поиска одной или нескольких записей</li>
+            <li>Сохранения и удаления записи</li>
+        </ul> 
+    </div></section>
+
+    <section class="slide"><div>
+        <h2>Когда использовать ActiveRecord</h2>
+        <ul>
+            <li>Простая бизнес логика</li>
+            <li>Вы полностью управляете используемой базой данных</li>
+            <li>Ваш заказчик мыслит в терминах таблиц и записей</li>
+        </ul> 
+    </div></section>
+
+    <section class="slide"><div>
+        <h2>DataMapper</h2>
+        <img src="pictures/data_mapper.png" class="center" style="width: 90%">
+    </div></section>
+
+    <section class="slide"><div>
+        <h2>Java Hybernate</h2>
+        <script type="snippet" lang="java">
+            @Entity
+            @Table(name = "EMPLOYEE")
+            public class Employee {
+               @Id @GeneratedValue
+               @Column(name = "id")
+               private int id;
+
+               @Column(name = "name")
+               private String name;
+
+               @Column(name = "salary")
+               private int salary;  
+
+               public Employee() {}
+            }
+        </script>
+    </div></section>
+
+    <section class="slide"><div>
+        <h2>Java Hybernate</h2>
+        <script type="snippet" lang="xml">
+            <hibernate-mapping>
+               <class name="Employee" table="EMPLOYEE">
+                  <meta attribute="class-description">
+                     This class contains the employee detail. 
+                  </meta>
+                  <id name="id" type="int" column="id">
+                     <generator class="native"/>
+                  </id>
+                  <property name="name" column="name" type="string"/>
+                  <property name="salary" column="salary" type="int"/>
+               </class>
+            </hibernate-mapping>
+        </script>
+    </div></section>
+
+    <section class="slide"><div>
+        <img src="pictures/data_mapper_injection.png" class="place">
+    </div></section>
+
+    <!--
+    <section class="slide"><div>
+        <h2>Реализация наследования</h2>
+    </div></section>
+    -->
+
     <section class="slide shout"><div>
         <h2>Уровень представления</h2>
     </div></section>
+
+    <section class="slide"><div>
+        <h2>Назначение уровня представления</h2>
+        <ul>
+            <li>Преобразование запроса во внутреннее представление</li>
+            <li>Вызов надлежащего метода модели или сервиса</li>
+            <li>Отображение результатов в подходящем для протокола виде</li>
+        </ul>
+    </div></section>
+
+    <section class="slide"><div>
+        <h2>Распростаненные протоколы</h2>
+        <ul>
+            <li>HTTP (классический Web)</li>
+            <li>HTTP API (REST, SOAP, JSON-RPC)</li>
+            <li>Google Protobuf, Apache Thrift</li>
+            <li>gRPC</li>
+            <li>Очереди: AMQP, STOMP</li>
+        </ul>
+    </div></section>
+
+    <section class="slide"><div>
+        <img src="pictures/mvc.png" class="center">
+    </div></section>
+    
 
     <section class="slide shout"><div>
         <h2>Управление сессиями</h2>
@@ -166,6 +401,70 @@
                 # ...
         </script>
     </div></section>
+
+    <section class="slide shout"><div>
+        <h2>Удаленные вызовы</h2>
+    </div></section>
+
+    <section class="slide"><div>
+        <h2>J2EE - way =)</h2>
+        <img src="pictures/j2ee_remote.png" class="center"/>
+    </div></section>
+
+    <section class="slide"><div>
+        <h2>Числа, которые все должны знать</h2>
+        <table>
+        <tr><th>Действие</th><th>Время, нс</th><th>Время, мкс</th></tr>
+        <tr><td>Обращение к RAM            </td><td>        100 </td><td>          </td></tr>
+        <tr><td>Отпарвить 1K по 1Gbps сети </td><td>     10,000 </td><td>       10 </td></tr>
+        <tr><td>Случайное чтение 4K с SSD  </td><td>    150,000 </td><td>      150 </td></tr>
+        <tr><td>RTT в датацентре           </td><td>    500,000 </td><td><b>500</b></td></tr>
+        <tr><td>Случайное чтение 4K c HDD  </td><td> 10,000,000 </td><td>   10,000 </td></tr>
+        <tr><td>RTT между континентами     </td><td>150,000,000 </td><td>  150,000 </td></tr>
+        </table>
+    </div></section>
+
+    <section class="slide"><div>
+        <h2>Паттерн Remote Facade</h2>
+        <img src="pictures/facade.png" class="center"/>
+    </div></section>
+
+    <section class="slide"><div>
+        <h2>Паттерн Remoter Facade</h2>
+        <p><code>Remote Facade</code> - предосталяет интерфейс (coarse-grained) для массовой загрузки данных, 
+            что позволяет оптимизировать сетевые вызовы. <br>
+        Форматы передачи данных:</p>
+        <ul>
+            <li>Сериализованные объекты: PDO</li>
+            <li>Текстовые форматы: XML, JSON, etc...</li>
+            <li>Google protobuf, Apache Thrift</li>
+        </ul>
+    </div></section>
+
+    <section class="slide"><div>
+        <h2>Паттерн Gateway</h2>
+        <p><code>Gateway</code> - класс обертка над внешним ресурсом или базой данных. 
+            Предоставляет удобный для использования интерфейс к внешней системе. </p>
+        <ul>
+            <li>Single Responsibility</li>
+            <li>Явное выделение интрефейса - можно заменить на Mock</li>
+            <li>Отличное место для профилирования, логирования, отладки и хаков</li>
+        </ul>
+    </div></section>
+
+    <section class="slide"><div>
+        <h2>Паттерн Gateway</h2>
+        <script type="snippet" lang="python">
+            class ExternalSystem(object):
+                def _request(self, **kwargs):
+                    # TODO: вся логика запроса
+                def send_message(self, user_id, user2_id, message):
+                    # TODO: self.request(...)
+                def list_messages(self, user_id, user2_id):
+                    # TODO: self.request(...)
+        </script>
+    </div></section>
+
 
     <!-- http://www.evolutionoftheweb.com -->
     <div class="progress"><div></div></div>
