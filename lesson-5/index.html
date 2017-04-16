@@ -1,0 +1,399 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+    <title>Архитектура ПО</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=792, user-scalable=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <link rel="stylesheet" href="../node_modules/shower-bright/styles/screen.css">
+    <link rel="stylesheet" href="../css/highlight/github.css">
+    <link rel="stylesheet" href="../css/index.css">
+</head>
+<body class="list">
+
+    <header class="caption">
+        <h1>Архитектура ПО</h1>
+    </header>
+
+    <!------------------------>
+
+    <section class="slide shout"><div>
+        <h2>Архитектура сетевых приложений</h2>
+    </div></section>
+
+    <section class="slide"><div>
+        <h2>Закон Конвея</h2>
+        <blockquote>
+            Any organization that designs a system (defined broadly) will produce a design whose structure is a copy of the organization's communication structure. Conway, Melvin E.
+        </blockquote>
+        <br>
+        <blockquote>
+            Архитектура системы повторяет коммуникационную струкутуру компании, ее разработавшей. Мелвин Конвей.
+        </blockquote>
+    </div></section>
+
+    <section class="slide shout"><div>
+        <h2>Архитектурные стили сетевых приложений</h2>
+    </div></section>
+
+    <section class="slide"><div>
+        <p>
+            Основное отличие архитектуры сетевых приложений от отстальных в том, что взаимодействие между компонентами ограничено передачей сообщений (некой разновидностью).
+        </p>
+    </div></section>
+
+    TODO: move to first lecture
+    Архитектурные свойства, представляющие ключевой интерес:
+
+    Производительность:
+        Сетевая производительность:
+            Throughoutput - пропускная способность - объем данных обрабатываемых системой в единицу времени.
+            Bandwidth - максимальная пропускная способность при заданном сетевом подключении.
+            Efficiency - частота использования сети и объем накладных расходов.
+            Scalability - способность обрабатывть большей объем информации без изменения архитектуры системы
+        Производительность для пользователя:
+            Latency - задержка между действием пользователя и реакцией системы. Из чего складывается latency ?
+            Completion - задержка между действием пользователя и завершением действия системы.
+
+
+    Scalability - масштабируемость - способность системы поддерживать большее число компонентов, ее способность к росту и развитию
+    Simplicity - простота ... сложность наоборот =) 
+    Modifiability - насколько просто вносить изменения. Для сетевых приложений важно dynamic modifiabilty - возможность
+        вностить изменения в работающую систему без ее остановки
+        Evolability - изменение компонента
+        Extensibility - добавление нового функционал
+        Configurability - возможность настройки уже развернутого компонента
+        Reusability - возможность повторного использования
+
+    Reliability - степень до которой система усточива к сбоям отдельных компонентов, коннекторов или ошибкам в данных.
+    Visibility - простота отладки и мониторинга системы
+
+
+        
+
+    REST - архитектурный стиль
+        layered
+        stateless
+        representation transfer (client processing)
+        self-descriptive
+        unified interface: media types and methods
+        cacheable
+        uri should not change
+        JS better than Java
+
+    <section class="slide shout"><div>
+        <h2>Микросервисы</h2>
+    </div></section>
+
+    <section class="slide"><div>
+        <h2>Микросервисы</h2>
+        <p>
+            Это архитектурный стиль при котором единое приложение строится как набор небольших сервисов,
+            каждый из которых работает в отдельном процессе и коммуницирует с остальными через API (зачастую поверх HTTP) 
+            или посредством обмена сообщениями.<br>
+            Микросервисы могут быть реализованы на <b>разных</b> языках.
+        </p>
+    </div></section>
+
+    <section class="slide"><div>
+        <img src="pictures/monolith.png" class="place" style="height: 100%">
+    </div></section>
+
+    <section class="slide"><div>
+        <h2>Проблемы монолитной архитектуры</h2>
+        <ul>
+            <li>Масштабирование</li>
+            <li>Разные компоненты имеют разные потребности в ресурсах</li>
+            <li>Не все задачи удобно решать используя только один язык/фреймворк</li>
+            <li>Закон Конвея</li>
+        </ul>
+    </div></section>
+
+    <section class="slide"><div>
+            <img src="pictures/microservices.png" class="place" style="height: 100%">
+    </div></section>
+
+    <section class="slide"><div>
+        <h2>Плюсы микросервисов</h2>
+        <ul>
+            <plus>Независимое развертывание</plus>
+            <plus>Большая надежность :)</plus>
+            <plus>Позволяют бороться со сложностью :)</plus>
+            <plus>Более эффективное использование ресурсов</plus>
+            <plus>Более явные интерфейсы</plus>
+            <plus>Организация вокруг потребностей бизнеса?</plus>
+        </ul>
+    </div></section>
+
+    <section class="slide"><div>
+        <h2>И минусы...</h2>
+        <ul>
+            <minus>Необходима развитая инфраструктура devops: конфигурация, мониторинг, логирование и т.д.</minus>
+            <minus>Меньшая надежность :(</minus>
+            <minus>Затрудняют рефакторинг :(</minus>
+            <minus>Накладные расходы на взаимодействие</minus>
+            <minus>Необходима развитая культура разработки и повторного использования кода</minus>
+            <minus>Целостность и синхронизация данных</minus>
+        </ul>
+    </div></section>
+
+    <section class="slide"><div>
+        <h2>Масштабированиe</h2>
+        <img src="pictures/scaling.png" class="center" style="height: 70%">
+    </div></section>
+
+    <section class="slide"><div>
+        <h2>Вопрос на миллион</h2>
+        <p style="font-size: 150%; text-align: center">Насколько мелким должен быть микросервис?</p>
+    </div></section>
+
+    <section class="slide shout"><div>
+        <h2>Gateway API</h2>
+    </div></section>
+
+    <section class="slide"><div>
+        <h2>Типичная страница продукта</h2>
+        <img src="pictures/mainpage.png" class="center">
+    </div></section>
+
+    <section class="slide"><div>
+        <h2>Каково поведение клиента?</h2>
+        <p>
+            В монолитной архитектуре:<br>
+            <code>GET https://api.company.com/productdetails/:Id</code>
+        </p>
+        <p>
+            В микросервисной архитектуре:<br>
+            <code>GET https://catalog.api.company.name/details/:Id</code><br>
+            <code>GET https://reviews.api.company.name/reviews/:Id</code><br>
+            <code>GET https://recommendations.api.company.name/get/:Id</code><br>
+            ???
+        </p>
+    </div></section>
+    
+    <section class="slide"><div>
+        <h2>Прямое обращение к микросервисам</h2>
+        <ul>
+            <minus>Все клиенты (web, mobile, tv) должны поддерживать сборку</minus>
+            <minus>Все микросервисы должны авторизовать и поддерживать протоколы всех клиентов</minus>
+            <minus>Сложный рефакторинг</minus>
+            <plus>Низкий latency</plus>
+        </ul>
+    </div></section>
+
+    <section class="slide"><div>
+        <h2>API gateway</h2>
+        <img src="pictures/api_gateway.png" class="center" style="width: 85%">
+    </div></section>
+
+    <section class="slide"><div>
+        <h2>Зона отвественности API gateway</h2>
+        <ul>
+            <li>Авторизация клиента</li>
+            <li>Content Negotiation</li>
+            <li>Работа с разными протоколами</li>
+            <li><b>Простая</b> бизнес логика</li>
+            <li>Балансировка нагрузки</li>
+            <li>Service Discovery</li>
+        </ul>
+    </div></section>
+
+    <section class="slide"><div>
+        <h2>Особенности реализации API gateway</h2>
+        <ul>
+            <li>Минимальный latency</li>
+            <li>Событийная архитектура или легковесные потоки</li>
+            <li>Go, Node.JS, Netty, Nginx+Lua, etc..</li>
+        </ul>
+    </div></section>
+
+    <section class="slide shout"><div>
+        <h2>Service Discovery</h2>
+    </div></section>
+
+    <section class="slide"><div>
+        <h2>А в чем собственно проблема?</h2>
+        <p>
+            В облачном окружении микросервисы часто запускаются и останавливаются при обновлении кода, 
+            в целях масштабирования, восстановления после апартных сбоев, и т.д.<br>
+            Таким образом нет фиксированного набора IP:PORT на котором запущен микросервис. 
+            Адреса и порты постоянно меняются.
+        </p>
+        <p>Решение: <code>Service Discovery</code></p>
+    </div></section>
+    
+    <section class="slide"><div>
+        <img src="pictures/client_service_discovery.png" class="place" style="height: 100%">
+    </div></section>
+
+    <section class="slide"><div>
+        <h2>Client Service Discovery</h2>
+        <ul>
+            <plus>Нет накладных расходов</plus>
+            <plus>Нужен только <code>Service Registry</code></plus>
+            <minus>Усложнение клиента: нужно реализовать логику балансировки</minus>
+        </ul>
+    </div></section>
+
+    <section class="slide"><div>
+        <img src="pictures/server_service_discovery.png" class="place" style="height: 100%">
+    </div></section>
+
+    <section class="slide"><div>
+        <h2>Server Service Discovery</h2>
+        <ul>
+            <minus>Накладные расходы на проксирование</minus>
+            <minus>Балансировщик - еще одна точка отказа</minus> 
+            <plus>Клиент абстрагирован от проблемы Service Discovery и балансировки</plus>
+        </ul>
+    </div></section>
+
+    <section class="slide shout"><div>
+        <h2>12 factor applications</h2>
+    </div></section>
+
+    <section class="slide"><div>
+        <h2>12 factor applications</h2>
+        <p>
+            Методология создания SaaS приложений, которые:
+            <ul>
+                <li>Используют декларативный формат процесса установки и настройки</li>
+                <li>Максимально переносимы между средами выполнения</li>
+                <li>Подходят для развертывания в облаке</li>
+                <li>Могут легко масштабироваться</li>
+                <li>Сводят к минимум разницу между тестовой и рабочей средой</li>
+            </ul>
+        </p>
+    </div></section>
+    
+    <section class="slide"><div>
+        <h2>1. Кодовая база</h2>
+        <p>Одно приложение - один репозиторий - множество развертываний</p>
+        <img src="pictures/12_codebase.png" class="center">
+    </div></section>
+
+    <section class="slide"><div>
+        <h2>2. Зависимости</h2>
+        <p>Все зависимости явно задекларированы и изолированы:
+            <ul>
+                <li>Все зависмости задекларированы явно в <code>Gemfile</code>, <code>dependencies.txt</code>, <code>Makefile.PL</code>, и т.д.</li>
+                <li>Приложение не полагается на внешние программы типы <code>curl</code> или <code>ImageMagick</code></li>
+                <li>Все зависимости изолированы в виртуальное окружение: <code>virtualenv</code>, <code>PerlBrew</code>, static binary... </li>
+            </ul>
+        </p>
+    </div></section> 
+
+    <section class="slide"><div>
+        <h2>3. Конфигурация в среде выполнения</h2>
+        <p>
+            Все настройки, которые меняют между инсталяциями должны быть вынесены из кода.
+            <br>
+            Тест: вы можете без опаски выложить проект в open-source.
+            <br>
+            Настройки нужно хранить в переменных окружения <code>%ENV</code>, <code>os.environ</code>, и т.д.
+        </p>
+    </div></section> 
+
+    <section class="slide"><div>
+        <h2>4. Внешние ресурсы</h2>
+        <p>
+            Все используемые службы: базы данных, очереди сообщений, SMTP сервера, соц. сети 
+            должны рассматриваться как внешние и должны быть легко заменены на другие.
+            <br>
+            Адрес каждой службы задается как одна строка (URL или DSN).
+        </p>
+    </div></section> 
+
+    <section class="slide"><div>
+        <h2>5. Сборка, релиз, выполнение</h2>
+        <p>
+            Процесс выкатки приложения проходит через 3 этапа:
+            <div class="lr">
+                <ul>
+                    <li>Сборка</li>
+                    <li>Релиз</li>
+                    <li>Исполнение</li>
+                </ul>
+                <img src="pictures/12_release.png" style="width: 70%; margin-left: 10%" >
+            </div>
+        </p>
+    </div></section> 
+
+    <section class="slide"><div>
+        <h2>6. Процессы</h2>
+        <p>
+            Приложение должно состоять из одного или нескольких процессов, 
+            не сохраняющих внутреннее состояние (<b>stateless</b>) и не полгающихся
+            на разделяемы данные (<b>share nothing</b>).
+            <br>
+            <ul>
+                <plus>Упаковка ресурсов на этапе сборки</plus>
+                <plus>Кеширование в памяти и на диске</plus>
+                <minus>Липкие сессии</minus>
+            </ul>
+        </p>
+    </div></section> 
+
+    <section class="slide"><div>
+        <h2>7. Привязка портов</h2>
+        <p>
+            Приложение не должно полагаться на внешний HTTP сервер (Apache, Uwsgi и т.д.).
+            Вместо этого приложение должно включать в себя библиотеку (Tornado, net/http, Jetty и т.д.)
+            и само запускаться как HTTP сервер.
+        </p>
+    </div></section>
+
+    <section class="slide"><div>
+        <h2>8. Параллелизм</h2>
+        <div class="lr">
+            <div style="width: 50%">
+                Для горизонтального масштабирования приложение должно полагаться на <b>процессы</b> ОС.
+                Приложение должно уметь запускать различные типы задач в <b>различных процессах</b>.
+                Приложение <b>не</b> должно демонизироваться.
+            </div>
+            <img src="pictures/12_processes.png" style="width: 50%">
+        </div>
+    </div></section>
+
+    <section class="slide"><div>
+        <h2>9. Утилизируемость</h2>
+        <ul>
+            <li>Процессы приложения должны запускать быстро - в течение нескольких секунд</li>
+            <li>Процессы должны корректно завершаться при получении <code>SIGTERM</code>:
+                Graceful Shutdown, возврат задач.
+            </li>
+        </ul>
+    </div></section>
+
+    <section class="slide"><div>
+        <h2>10. Логирование</h2>
+        <ul>
+            <li>Приложение должно писать свой лог в stdout</li>
+            <li>Приложение не должно заниматься маршрутизацией и хранением своего лога</li>
+            <li>Вся работа с логами осуществляется средствами среды исполнения</li>
+        </ul>
+    </div></section>
+
+    <section class="slide"><div>
+        <h2>11. Административные задачи</h2>
+        <p>Административные задачи (миграции, очистка данных и т.п.) должны выполняться
+            отдельным процессом, который поставляется вместе с приложением и работает в том же
+            окружении (настройки, логи и т.п.)
+        </p>
+    </div></section>
+    
+    <section class="slide"><div>
+        <h2>12. Разработка и эксплуатация приложения</h2>
+        <ul>
+            <li>Тестовое и рабочее окружение должны быть максимально похожи</li>
+            <li>Разработкой и оперированием должны заниматься одни люди (devops)</li>
+            <li>Время на выкатку приложения должно быть минимальным (минуты, часы)</li>
+        </ul>
+    </div></section>
+
+    <div class="progress"><div></div></div>
+    <script src="../js/highlight.pack.js"></script>
+    <script src="../node_modules/shower-core/shower.min.js"></script>
+    <script src="../js/init.js"></script>
+</body>
+</html>
