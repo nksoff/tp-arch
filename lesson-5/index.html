@@ -18,68 +18,101 @@
     <!------------------------>
 
     <section class="slide shout"><div>
-        <h2>Архитектура сетевых приложений</h2>
+        <h2>Архитектурные стили</h2>
     </div></section>
 
     <section class="slide"><div>
-        <h2>Закон Конвея</h2>
-        <blockquote>
-            Any organization that designs a system (defined broadly) will produce a design whose structure is a copy of the organization's communication structure. Conway, Melvin E.
-        </blockquote>
-        <br>
-        <blockquote>
-            Архитектура системы повторяет коммуникационную струкутуру компании, ее разработавшей. Мелвин Конвей.
-        </blockquote>
-    </div></section>
-
-    <section class="slide shout"><div>
-        <h2>Архитектурные стили сетевых приложений</h2>
-    </div></section>
-
-    <section class="slide"><div>
+        <h2>Архитектурный стиль</h2>
         <p>
-            Основное отличие архитектуры сетевых приложений от отстальных в том, что взаимодействие между компонентами ограничено передачей сообщений (некой разновидностью).
+            Это набор согласованных <b>ограничений</b>, накладываемых на роли/свойства архитектурных элементов (компонентов и коннекторов) и взаимосвязи между ними.
+        </p>
+        <p>
+            Каждый архитектруный стиль придает системе некоторые <b>свойства</b>, которые могу соответствовать (или не соответсвовать) требованиям.
         </p>
     </div></section>
 
-    TODO: move to first lecture
-    Архитектурные свойства, представляющие ключевой интерес:
-
-    Производительность:
-        Сетевая производительность:
-            Throughoutput - пропускная способность - объем данных обрабатываемых системой в единицу времени.
-            Bandwidth - максимальная пропускная способность при заданном сетевом подключении.
-            Efficiency - частота использования сети и объем накладных расходов.
-            Scalability - способность обрабатывть большей объем информации без изменения архитектуры системы
-        Производительность для пользователя:
-            Latency - задержка между действием пользователя и реакцией системы. Из чего складывается latency ?
-            Completion - задержка между действием пользователя и завершением действия системы.
-
-
-    Scalability - масштабируемость - способность системы поддерживать большее число компонентов, ее способность к росту и развитию
-    Simplicity - простота ... сложность наоборот =) 
-    Modifiability - насколько просто вносить изменения. Для сетевых приложений важно dynamic modifiabilty - возможность
-        вностить изменения в работающую систему без ее остановки
-        Evolability - изменение компонента
-        Extensibility - добавление нового функционал
-        Configurability - возможность настройки уже развернутого компонента
-        Reusability - возможность повторного использования
-
-    Reliability - степень до которой система усточива к сбоям отдельных компонентов, коннекторов или ошибкам в данных.
-    Visibility - простота отладки и мониторинга системы
-
-
+    <section class="slide"><div>
+        <h2>Архитектурные свойства (Performance)</h2>
+        <ul>
+            <li><b>Throughoutput</b> - объем информации обрабатываемой в ед. времени</li>
+            <li><b>Efficiency</b> - доля накладных расходов при передачи информации</li>
+            <li><b>Scalability</b> (*) - способность системы обрабатывать большей объем информации без изменения архитектуры</li>
+            <li><b>Latency</b> - задержка между действием пользователя и реакцией системы</li>
+            <li><b>Completion time</b> - задержка между действием пользователя и получением результата</li>
+        </ul>
+    </div></section>
         
+    <section class="slide"><div>
+        <h2>Архитектурные свойства</h2>
+        <ul>
+            <li><b>Simplicity</b> - концептуальная простота (!)</li>
+            <li><b>Modifiabilty</b> - простота вненсения изменений в систему (изменение, добавление, конфигурация, повторное использование)</li>
+            <li><b>Reliability</b> - устойчивость системы к отказу отдельных компонентов</li>
+            <li><b>Visibility</b> - простоста отладки и мониторинга системы</li>
+        </ul>
+    </div></section>
 
-    REST - архитектурный стиль
-        layered
-        stateless
-        representation transfer (client processing)
-        self-descriptive
-        unified interface: media types and methods
-        cacheable
-        uri should not change
-        JS better than Java
+    <section class="slide"><div>
+        <h2>Архитектурные стили сетевых приложений</h2>
+        <ul>
+            <li>Client-Server</li>
+            <li>Layered Client-Server</li>
+            <li>Layered Client-Cache-Server</li>
+            <li>Mobile Code</li>
+            <li>Event Based Integration</li>
+            <li>Distributed Objects</li>
+            <li>... множество ...</li>
+        </ul>
+    </div></section>
+
+    <section class="slide"><div>
+        <h2>REST</h2>
+        <p>
+            Является комбинацией следующих стилей:
+            <ul>
+                <li><b>Layered</b> - компоненты системы могут образовывать слои</li>
+                <li><b>Stateless</b> - состояние хранится на клиенте</li>
+                <li><b>Cachable</b> - документы могут кешироваться промежуточными слоями</li>
+                <li><b>Uniform Interface</b> - все компоненты архитектуры обладают общим интерфейсом</li>
+            </ul>
+        </p>
+    </div></section>
+
+    <section class="slide"><div>
+        <h2>Ключевые особенности REST</h2>
+        <ul>
+            <li><b>Representation Transfer</b> - передается полное состояние сущности, клиент отвечает за обработку</li>
+            <li><b>Resources & URLs</b> - сервис предоставляет набор ресурсов с неизменяемыми адресами</li>
+            <li>Сервис полагается на стандартные механизмы HTTP для кеширования и согласования контента</li>
+        </ul>
+    </div></section>
+
+    <section class="slide"><div>
+        <h2>REST в современном представлений</h2>
+        <ul>
+            <li><b>Representation Transfer</b> - передается полное состояние сущности, клиент отвечает за обработку</li>
+            <li><b>Resources & URLs</b> - сервис предоставляет набор ресурсов с неизменяемыми адресами</li>
+            <li>Сервис полагается на стандартные механизмы HTTP для кеширования и согласования типа содержимого</li>
+        </ul>
+    </div></section>
+
+
+    <section class="slide"><div>
+        <h2>REST в современном представлений</h2>
+        <ul>
+        </ul>
+
+    </div></section>
+        <!--
+        REST - архитектурный стиль
+            layered
+            stateless
+            representation transfer (client processing)
+            self-descriptive
+            unified interface: media types and methods
+            cacheable
+            uri should not change
+        -->
 
     <section class="slide shout"><div>
         <h2>Микросервисы</h2>
@@ -107,6 +140,17 @@
             <li>Не все задачи удобно решать используя только один язык/фреймворк</li>
             <li>Закон Конвея</li>
         </ul>
+    </div></section>
+
+    <section class="slide"><div>
+        <h2>Закон Конвея</h2>
+        <blockquote>
+            Any organization that designs a system (defined broadly) will produce a design whose structure is a copy of the organization's communication structure. Conway, Melvin E.
+        </blockquote>
+        <br>
+        <blockquote>
+            Архитектура системы повторяет коммуникационную струкутуру компании, ее разработавшей. Мелвин Конвей.
+        </blockquote>
     </div></section>
 
     <section class="slide"><div>
